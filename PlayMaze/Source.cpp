@@ -1,4 +1,7 @@
 //This is a maze that a user can play
+//Author: Borhan Alizadeh
+//Date: September 3, 2016
+
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
@@ -18,7 +21,7 @@ char mazeSheet[10][10] =
 ,'O','O',' ',' ',' ','O','O','O',' ','O'
 ,'O','O','O','O','O','O','O','O',' ','O'
 ,'O','O','O','O','O','O','O','O',' ','O'
-,'O','O','O','O','O','O','O','O','#','O'
+,'O','O','O','O','O','O','O','O',' ','O'
 };
 
 int currSX;
@@ -26,17 +29,17 @@ int currSY;
 
 void start();
 void printMaze();
-void printEmptyMaze();
 int getCurrSX();
 int getCurrSY();
 void setCurrSX(int x);
 void setCurrSY(int y);
+boolean checkWin(int x, int y);
 
 char s = mazeSheet[1][0];
 
 
 int main(void) {
-	//start();
+	start();
 	system("CLS");
 	printMaze();
 	setCurrSX(1);
@@ -53,44 +56,97 @@ int main(void) {
 		currX = getCurrSX();
 		currY = getCurrSY();
 
-		c = 0;
+		c = 0; //key up
 		switch ((c = _getch())) {
 		case 72:
+			if (currX >= 0) {
+				if (mazeSheet[currX - 1][currY] == ' ') {
+					setCurrSX(currX - 1);
+
+					if (!checkWin(currX - 1, currY)) {
+						mazeSheet[currX][currY] = ' ';
+						mazeSheet[currX - 1][currY] = 'X';
+						system("CLS");
+						printMaze();
+					}
+					else {
+						mazeSheet[1][0] = 'X';
+						printf("\t\t\t\t\t\t\t");
+						printf("You win!");
+						Sleep(3000);
+						main();
+					}
+				}
+			}
+			break;
+
+		case 80: //key down
+			if (currX < 10) {
+				if (mazeSheet[currX + 1][currY] == ' ') {
+					setCurrSX(currX + 1);
+
+					if (!checkWin(currX+1, currY)) {
+						mazeSheet[currX][currY] = ' ';
+						mazeSheet[currX + 1][currY] = 'X';
+						system("CLS");
+						printMaze();
+					}
+					else {
+						mazeSheet[1][0] = 'X';
+						printf("\t\t\t\t\t\t\t");
+						printf("You win!");
+						Sleep(3000);
+						main();
+
+					}
+				}
+			}
+			break;
+
+		case 75: //key left
 			if (currY > 0) {
 				if (mazeSheet[currX][currY - 1] == ' ') {
-					mazeSheet[currX][currY] = ' ';
-					mazeSheet[currX][currY+1] = 'S';
 					setCurrSY(currY - 1);
+					if (!checkWin(currX, currY - 1)) {
+						mazeSheet[currX][currY] = ' ';
+						mazeSheet[currX][currY - 1] = 'X';
+						system("CLS");
+						printMaze();
+					}
+					else {
+						mazeSheet[1][0] = 'X';
+						printf("\t\t\t\t\t\t\t");
+						printf("You win!");
+						Sleep(3000);
+						main();
+					}
 
 				}
 			}
-			cout << endl << "Up" << endl;//key up
 			break;
 
-		case 80:
-			cout << endl << "Down" << endl;   // key down
-			break;
-
-		case 75:
-			cout << endl << "Left" << endl;  // key left
-			break;
-
-		case 77:
-			if (currX < 10) {
-				printf("%d and %d", currX, currY);
+		case 77: //key right
+			if (currY < 10) {
 				if (mazeSheet[currX][currY+1] == ' ') {
-					cout << endl << "Hello" << endl;  // key right
-
-					mazeSheet[currX][currY] = ' ';
-					mazeSheet[currX][currY + 1] = 'X';
-					system("CLS");
-					printMaze();
 					setCurrSY(currY + 1);
+					if (!checkWin(currX, currY + 1)) {
+						mazeSheet[currX][currY] = ' ';
+						mazeSheet[currX][currY + 1] = 'X';
+						system("CLS");
+						printMaze();
+					}
+					else {
+						mazeSheet[1][0] = 'X';
+						printf("\t\t\t\t\t\t\t");
+						printf("You win!");
+						Sleep(3000);
+						main();
+					}
 
 				}
 			}
-			cout << endl << "Right" << endl;  // key right
 			break;
+
 		default:
 			cout << endl << "null" << endl;  // not arrow
 			break;
@@ -105,20 +161,24 @@ int main(void) {
 
 //Welcome message
 void start() {
+
 	string s1 = "Welcome to this Maze";
 	string s2 = "Please use arrows keys on your keyboard to play!";
 	printf("\n\n\n");
+	printf("\t\t\t\t\t\t");
 
 	for (char c1 : s1) {
 		printf("%c", c1);
-		Sleep(50);
+		Sleep(20);
 	}
 	printf("\n");
+	printf("\t\t\t\t");
 
 	for (char c2 : s2) {
 		printf("%c", c2);
-		Sleep(50);
+		Sleep(20);
 	}
+	Sleep(3000);
 } 
 
 
@@ -126,6 +186,7 @@ void start() {
 void printMaze() {
 	for (int x = 0; x < 10; ++x) {
 		printf("\n");
+		printf("\t\t\t\t\t\t\t");
 		for (int y = 0; y < 10; ++y) {
 			printf("%c", mazeSheet[x][y]);
 		}
@@ -133,15 +194,6 @@ void printMaze() {
 }
 
 
-//Print an empty maze on screen
-void printEmptyMaze() {
-	for (int x = 0; x < 10; ++x) {
-		printf("\n");
-		for (int y = 0; y < 10; ++y) {
-			printf("%c", ' ');
-		}
-	}
-}
 
 //set the corrdinate of X for start point
 void setCurrSX(int x) {
@@ -162,4 +214,13 @@ void setCurrSY(int y) {
 //Get the coordinate of y
 int getCurrSY() {
 	return currSY;
+}
+
+
+//Check to see if user wins
+boolean checkWin(int x, int y) {
+			if ((x == 9) && (y == 8)) {
+				return true;
+	}
+			return false;
 }
