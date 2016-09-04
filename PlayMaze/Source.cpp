@@ -161,7 +161,7 @@ int main(void) {
 
 //Welcome message
 void start() {
-
+	system("CLS");
 	string s1 = "Welcome to this Maze";
 	string s2 = "Please use arrows keys on your keyboard to play!";
 	printf("\n\n\n");
@@ -184,9 +184,18 @@ void start() {
 
 //Print the maze on screen
 void printMaze() {
+	printf("\n\n\n");
+	printf("\t\t\t\t\t\t");
+	printf("Welcome to this Maze");
+	
+	printf("\n\t\t\t\t");
+	printf("Please use arrows keys on your keyboard to play!");
+	printf("\n\n\n");
+	
+
 	for (int x = 0; x < 10; ++x) {
 		printf("\n");
-		printf("\t\t\t\t\t\t\t");
+		printf("\t\t\t\t\t\t");
 		for (int y = 0; y < 10; ++y) {
 			printf("%c", mazeSheet[x][y]);
 		}
